@@ -10,6 +10,8 @@
     "xml",
     "svg",
     "javascript",
-    "typescript"
+    "typescript",
+    "javascriptreact",
+    "typescriptreact"
   ]
 }
