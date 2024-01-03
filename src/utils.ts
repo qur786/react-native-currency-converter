@@ -177,5 +177,6 @@ export function getCurrencyItems(): ItemType<string>[] {
   return Object.entries(CURRENCIES).map(([code, country]) => ({
     label: country,
     value: code,
+    // TODO: add flag icons
   }));
 }
