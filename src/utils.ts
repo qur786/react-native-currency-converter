@@ -171,7 +171,7 @@ const CURRENCIES = {
   ZMK: "Zambian Kwacha (pre-2013)",
   ZMW: "Zambian Kwacha",
   ZWL: "Zimbabwean Dollar",
-};
+} as const;
 
 export function getCurrencyItems(): ItemType<string>[] {
   return Object.entries(CURRENCIES).map(([code, country]) => ({

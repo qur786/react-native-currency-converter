@@ -15,6 +15,8 @@ import { getCurrencyItems } from "./utils";
 function App(): React.JSX.Element {
   const [amount, setAmount] = useState("");
   const [convertedAmount, setConvertedAmount] = useState<number>(0);
+  const [baseCountry, setBaseCountry] = useState<string | null>(null);
+  const [toCountry, setToCountry] = useState<string | null>(null);
 
   const handleConvertPress: PressableProps["onPress"] = () => {
     const amt = Number.parseFloat(amount);
@@ -52,10 +54,14 @@ function App(): React.JSX.Element {
         </View>
         <View style={styles.dropdownContainer}>
           <CurrencyDropdown
+            value={baseCountry}
+            setValue={setBaseCountry}
             items={getCurrencyItems()}
             containerStyle={styles.currencyDropdownFrom}
           />
           <CurrencyDropdown
+            value={toCountry}
+            setValue={setToCountry}
             items={getCurrencyItems()}
             containerStyle={styles.currencyDropdownTo}
           />
