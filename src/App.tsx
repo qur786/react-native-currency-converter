@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginVertical: 16,
-    color: "#3C40C6",
+    color: "#25CCF7",
     fontFamily: "cursive",
   },
   dropdownContainer: {
