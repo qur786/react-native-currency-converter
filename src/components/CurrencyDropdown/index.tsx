@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { StyleSheet } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 import type {
   DropDownPickerProps,
@@ -33,6 +34,14 @@ export function CurrencyDropdown({
       items={items}
       setItems={setItems}
       containerStyle={containerStyle}
+      style={styles.box}
     />
   );
 }
+
+const styles = StyleSheet.create({
+  box: {
+    borderWidth: 1,
+    borderColor: "#99AAAB",
+  },
+});

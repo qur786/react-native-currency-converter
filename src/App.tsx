@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Pressable,
   SafeAreaView,
   StatusBar,
   StyleSheet,
@@ -7,10 +8,15 @@ import {
   TextInput,
   View,
 } from "react-native";
+import type { PressableProps } from "react-native";
 import { CurrencyDropdown } from "./components/CurrencyDropdown";
 
 function App(): React.JSX.Element {
   const [amount, setAmount] = useState("");
+
+  const handleConvertPress: PressableProps["onPress"] = () => {
+    console.log("Hello");
+  };
 
   return (
     <>
@@ -26,6 +32,14 @@ function App(): React.JSX.Element {
             placeholder="Enter amount"
             style={styles.amountInput}
           />
+          <Pressable
+            onPress={handleConvertPress}
+            android_ripple={{
+              color: "#67E6DC",
+            }}
+            style={styles.convertBtn}>
+            <Text style={styles.convertBtnText}>Convert</Text>
+          </Pressable>
         </View>
         <View style={styles.dropdownContainer}>
           <CurrencyDropdown containerStyle={styles.currencyDropdownFrom} />
@@ -41,6 +55,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
   },
+  title: {
+    fontSize: 36,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginVertical: 16,
+    color: "#3C40C6",
+    fontFamily: "cursive",
+  },
   dropdownContainer: {
     flexDirection: "row",
     gap: 10,
@@ -52,22 +74,26 @@ const styles = StyleSheet.create({
   currencyDropdownTo: {
     flexShrink: 1,
   },
-  title: {
-    fontSize: 36,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginVertical: 16,
-    color: "#3C40C6",
-    fontFamily: "cursive",
+  amountContainer: {
+    gap: 12,
   },
-  amountContainer: {},
   amountLabel: {
-    marginVertical: 12,
     fontSize: 16,
   },
   amountInput: {
     borderWidth: 1,
+    borderColor: "#99AAAB",
     borderRadius: 8,
+  },
+  convertBtn: {
+    backgroundColor: "#25CCF7",
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    alignSelf: "flex-end",
+  },
+  convertBtnText: {
+    color: "#ffffff",
   },
 });
 
