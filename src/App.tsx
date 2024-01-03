@@ -17,6 +17,7 @@ function App(): React.JSX.Element {
 
   const handleConvertPress: PressableProps["onPress"] = () => {
     const amt = Number.parseFloat(amount);
+    // TODO: add convert logic
     if (Number.isNaN(amt) === false) {
       setConvertedAmount(amt);
     } else {
