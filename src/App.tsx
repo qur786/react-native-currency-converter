@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   amountContainer: {},
   amountLabel: {
     marginVertical: 12,
-    color: "#2F363F",
+    fontSize: 16,
   },
   amountInput: {
     borderWidth: 1,
