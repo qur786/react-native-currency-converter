@@ -1,17 +1,7 @@
 {
-  "colorize.languages": [
-    "css",
-    "sass",
-    "scss",
-    "less",
-    "postcss",
-    "sss",
-    "stylus",
-    "xml",
-    "svg",
-    "javascript",
-    "typescript",
-    "javascriptreact",
-    "typescriptreact"
-  ]
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": false,
+  "prettier.useEditorConfig": false,
+  "prettier.configPath": ".prettierrc.js"
 }
