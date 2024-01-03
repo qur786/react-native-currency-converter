@@ -7,24 +7,17 @@ import type {
 } from "react-native-dropdown-picker";
 
 interface CurrencyDropDownProps {
+  items: ItemType<string>[];
   containerStyle?: DropDownPickerProps<string>["containerStyle"];
 }
 
 export function CurrencyDropdown({
   containerStyle,
+  items,
 }: CurrencyDropDownProps): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(null);
-  const [items, setItems] = useState<ItemType<string>[]>([
-    {
-      label: "India",
-      value: "india",
-    },
-    {
-      label: "USA",
-      value: "usa",
-    },
-  ]);
+
   return (
     <DropDownPicker
       open={isOpen}
@@ -32,7 +25,6 @@ export function CurrencyDropdown({
       value={selectedValue}
       setValue={setSelectedValue}
       items={items}
-      setItems={setItems}
       containerStyle={containerStyle}
       style={styles.box}
     />

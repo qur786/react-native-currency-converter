@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import type { PressableProps } from "react-native";
 import { CurrencyDropdown } from "./components/CurrencyDropdown";
+import { getCurrencyItems } from "./utils";
 
 function App(): React.JSX.Element {
   const [amount, setAmount] = useState("");
@@ -50,8 +51,14 @@ function App(): React.JSX.Element {
           </Pressable>
         </View>
         <View style={styles.dropdownContainer}>
-          <CurrencyDropdown containerStyle={styles.currencyDropdownFrom} />
-          <CurrencyDropdown containerStyle={styles.currencyDropdownTo} />
+          <CurrencyDropdown
+            items={getCurrencyItems()}
+            containerStyle={styles.currencyDropdownFrom}
+          />
+          <CurrencyDropdown
+            items={getCurrencyItems()}
+            containerStyle={styles.currencyDropdownTo}
+          />
         </View>
       </SafeAreaView>
     </>

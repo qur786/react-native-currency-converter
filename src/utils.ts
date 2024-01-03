@@ -1,4 +1,6 @@
-export const CURRENCIES = {
+import type { ItemType } from "react-native-dropdown-picker";
+
+const CURRENCIES = {
   AED: "United Arab Emirates Dirham",
   AFN: "Afghan Afghani",
   ALL: "Albanian Lek",
@@ -170,3 +172,10 @@ export const CURRENCIES = {
   ZMW: "Zambian Kwacha",
   ZWL: "Zimbabwean Dollar",
 };
+
+export function getCurrencyItems(): ItemType<string>[] {
+  return Object.entries(CURRENCIES).map(([code, country]) => ({
+    label: country,
+    value: code,
+  }));
+}
