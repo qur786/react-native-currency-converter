@@ -13,9 +13,15 @@ import { CurrencyDropdown } from "./components/CurrencyDropdown";
 
 function App(): React.JSX.Element {
   const [amount, setAmount] = useState("");
+  const [convertedAmount, setConvertedAmount] = useState<number>(0);
 
   const handleConvertPress: PressableProps["onPress"] = () => {
-    console.log("Hello");
+    const amt = Number.parseFloat(amount);
+    if (Number.isNaN(amt) === false) {
+      setConvertedAmount(amt);
+    } else {
+      // TODO: add error handling.
+    }
   };
 
   return (
@@ -23,6 +29,7 @@ function App(): React.JSX.Element {
       <StatusBar />
       <SafeAreaView style={styles.container}>
         <Text style={styles.title}>Currency Converter</Text>
+        <Text style={styles.convertedAmount}>Result: {convertedAmount}</Text>
         <View style={styles.amountContainer}>
           <Text style={styles.amountLabel}>Amount</Text>
           <TextInput
@@ -62,6 +69,11 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     color: "#25CCF7",
     fontFamily: "cursive",
+  },
+  convertedAmount: {
+    textAlign: "center",
+    height: 48,
+    marginVertical: 20,
   },
   dropdownContainer: {
     flexDirection: "row",
