@@ -105,6 +105,8 @@ function App(): React.JSX.Element {
           placeholder="Enter amount"
           style={styles.amountInput}
         />
+      </View>
+      <View style={styles.btnContainer}>
         <Pressable
           onPress={handleConvertPress}
           android_ripple={{
@@ -112,6 +114,14 @@ function App(): React.JSX.Element {
           }}
           style={styles.convertBtn}>
           <Text style={styles.convertBtnText}>Convert</Text>
+        </Pressable>
+        <Pressable
+          onPress={console.log}
+          android_ripple={{
+            color: "#67E6DC",
+          }}
+          style={styles.resetBtn}>
+          <Text style={styles.resetBtnText}>Reset</Text>
         </Pressable>
       </View>
       <View style={styles.dropdownContainer}>
@@ -183,14 +193,28 @@ const styles = StyleSheet.create({
     borderColor: "#99AAAB",
     borderRadius: 8,
   },
+  btnContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 10,
+    marginTop: 16,
+  },
   convertBtn: {
     backgroundColor: "#25CCF7",
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
-    alignSelf: "flex-end",
+  },
+  resetBtn: {
+    backgroundColor: "#25CCF7",
+    paddingVertical: 12,
+    paddingHorizontal: 28,
+    borderRadius: 8,
   },
   convertBtnText: {
+    color: "#ffffff",
+  },
+  resetBtnText: {
     color: "#ffffff",
   },
 });
