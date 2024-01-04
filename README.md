@@ -1,8 +1,8 @@
 # Currency Converter
 
-<image src="https://github.com/qur786/react-native-currency-converter/blob/main/assets/home.png?raw=true" height=400 width=200 />
+<img src="assets/home.png" alt="Home Page" width="200" height="400" />
 
-<image src="assets/converted.png" height=400 width=200 />
+<img src="assets/converted.png" alt="Home Page" width="200" height="400" />
 
 ## Description
 
