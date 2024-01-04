@@ -60,20 +60,26 @@ function App(): React.JSX.Element {
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Currency Converter</Text>
       <View style={styles.resultContainer}>
-        <Text style={styles.convertedAmount}>
-          Converted Amount:{" "}
-          {`${convertedAmount.toFixed(2)} ${toCurrency ?? ""}`}
-        </Text>
-        <Text style={styles.exchangeRate}>
+        <Text style={styles.resultTitle}>Converted Amount</Text>
+        <Text style={styles.result}>{`${convertedAmount.toFixed(2)} ${
+          toCurrency ?? ""
+        }`}</Text>
+        {typeof toCurrency === "string" && typeof baseCurrency === "string" ? (
+          <Text
+            style={
+              styles.resultTitle
+            }>{`Current Exchange Rate (${baseCurrency} - ${toCurrency})`}</Text>
+        ) : undefined}
+        <Text style={styles.result}>
           {typeof toCurrency === "string" && typeof baseCurrency === "string"
-            ? `Current Exchange Rate (${baseCurrency} - ${toCurrency}): ${(
+            ? (
                 TEMP_CURRENCY_EXCHANGE[
                   toCurrency as keyof typeof TEMP_CURRENCY_EXCHANGE
                 ] /
                 TEMP_CURRENCY_EXCHANGE[
                   baseCurrency as keyof typeof TEMP_CURRENCY_EXCHANGE
                 ]
-              ).toFixed(2)} `
+              ).toFixed(2)
             : undefined}
         </Text>
       </View>
@@ -127,13 +133,21 @@ const styles = StyleSheet.create({
     fontFamily: "cursive",
   },
   resultContainer: {
-    height: 56,
     marginVertical: 24,
     alignItems: "center",
     gap: 10,
+    backgroundColor: "#25CCF7",
+    paddingVertical: 16,
+    borderRadius: 12,
   },
-  convertedAmount: {},
-  exchangeRate: {},
+  resultTitle: {
+    color: "#ffffff",
+    fontSize: 18,
+  },
+  result: {
+    color: "#2C3335",
+    fontSize: 16,
+  },
   dropdownContainer: {
     flexDirection: "row",
     gap: 10,
