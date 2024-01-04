@@ -24,7 +24,7 @@ function App(): React.JSX.Element {
   const [baseCurrency, setBaseCurrency] = useState<string | null>(null);
   const [toCurrency, setToCurrency] = useState<string | null>(null);
 
-  const handleConvertPress: PressableProps["onPress"] = () => {
+  const handleConvertButtonPress: PressableProps["onPress"] = () => {
     const amt = Number.parseFloat(amount);
     if (Number.isNaN(amt) === true) {
       return Snackbar.show({
@@ -117,7 +117,7 @@ function App(): React.JSX.Element {
       </View>
       <View style={styles.btnContainer}>
         <Pressable
-          onPress={handleConvertPress}
+          onPress={handleConvertButtonPress}
           android_ripple={{
             color: "#67E6DC",
           }}
