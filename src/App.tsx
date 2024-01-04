@@ -39,7 +39,7 @@ function App(): React.JSX.Element {
       return Snackbar.show({
         text: "Select base currency",
         duration: Snackbar.LENGTH_SHORT,
-        backgroundColor: "#25CCF7",
+        backgroundColor: "#E8290B",
       });
     }
 
@@ -47,7 +47,7 @@ function App(): React.JSX.Element {
       return Snackbar.show({
         text: "Select to currency",
         duration: Snackbar.LENGTH_SHORT,
-        backgroundColor: "#25CCF7",
+        backgroundColor: "#E8290B",
       });
     }
 
