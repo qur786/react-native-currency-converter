@@ -9,23 +9,52 @@ import {
   View,
 } from "react-native";
 import type { PressableProps } from "react-native";
+import Snackbar from "react-native-snackbar";
 import { CurrencyDropdown } from "./components/CurrencyDropdown";
-import { getCurrencyItems } from "./utils";
+import { getCurrencyItems, TEMP_CURRENCY_EXCHANGE } from "./utils";
 
 function App(): React.JSX.Element {
   const [amount, setAmount] = useState("");
   const [convertedAmount, setConvertedAmount] = useState<number>(0);
-  const [baseCountry, setBaseCountry] = useState<string | null>(null);
-  const [toCountry, setToCountry] = useState<string | null>(null);
+  const [baseCurrency, setBaseCurrency] = useState<string | null>(null);
+  const [toCurrency, setToCurrency] = useState<string | null>(null);
 
   const handleConvertPress: PressableProps["onPress"] = () => {
     const amt = Number.parseFloat(amount);
-    // TODO: add convert logic
-    if (Number.isNaN(amt) === false) {
-      setConvertedAmount(amt);
-    } else {
-      // TODO: add error handling.
+    if (Number.isNaN(amt) === true) {
+      return Snackbar.show({
+        text: "Enter valid amount",
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: "#E8290B",
+      });
     }
+
+    if (typeof baseCurrency !== "string") {
+      return Snackbar.show({
+        text: "Select base currency",
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: "#25CCF7",
+      });
+    }
+
+    if (typeof toCurrency !== "string") {
+      return Snackbar.show({
+        text: "Select to currency",
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: "#25CCF7",
+      });
+    }
+
+    const output =
+      amt *
+      (TEMP_CURRENCY_EXCHANGE[
+        toCurrency as keyof typeof TEMP_CURRENCY_EXCHANGE
+      ] /
+        TEMP_CURRENCY_EXCHANGE[
+          baseCurrency as keyof typeof TEMP_CURRENCY_EXCHANGE
+        ]);
+
+    setConvertedAmount(output);
   };
 
   return (
@@ -54,14 +83,14 @@ function App(): React.JSX.Element {
         </View>
         <View style={styles.dropdownContainer}>
           <CurrencyDropdown
-            value={baseCountry}
-            setValue={setBaseCountry}
+            value={baseCurrency}
+            setValue={setBaseCurrency}
             items={getCurrencyItems()}
             containerStyle={styles.currencyDropdownFrom}
           />
           <CurrencyDropdown
-            value={toCountry}
-            setValue={setToCountry}
+            value={toCurrency}
+            setValue={setToCurrency}
             items={getCurrencyItems()}
             containerStyle={styles.currencyDropdownTo}
           />
