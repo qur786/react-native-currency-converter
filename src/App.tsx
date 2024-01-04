@@ -10,7 +10,11 @@ import {
 import type { PressableProps } from "react-native";
 import Snackbar from "react-native-snackbar";
 import { CurrencyDropdown } from "./components/CurrencyDropdown";
-import { getCurrencyItems, TEMP_CURRENCY_EXCHANGE } from "./utils";
+import {
+  getCountryFlagFromCurrencyCode,
+  getCurrencyItems,
+  TEMP_CURRENCY_EXCHANGE,
+} from "./utils";
 
 function App(): React.JSX.Element {
   const [amount, setAmount] = useState("");
@@ -62,13 +66,17 @@ function App(): React.JSX.Element {
       <View style={styles.resultContainer}>
         <Text style={styles.resultTitle}>Converted Amount</Text>
         <Text style={styles.result}>{`${convertedAmount.toFixed(2)} ${
-          toCurrency ?? ""
+          typeof toCurrency === "string"
+            ? getCountryFlagFromCurrencyCode(toCurrency)
+            : ""
         }`}</Text>
         {typeof toCurrency === "string" && typeof baseCurrency === "string" ? (
           <Text
             style={
               styles.resultTitle
-            }>{`Current Exchange Rate (${baseCurrency} - ${toCurrency})`}</Text>
+            }>{`Current Exchange Rate (${getCountryFlagFromCurrencyCode(
+            baseCurrency
+          )} - ${getCountryFlagFromCurrencyCode(toCurrency)})`}</Text>
         ) : undefined}
         <Text style={styles.result}>
           {typeof toCurrency === "string" && typeof baseCurrency === "string"
