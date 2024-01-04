@@ -1,3 +1,6 @@
+import React from "react";
+import { Text } from "react-native";
+import { getCountryFlag } from "./flag-icons";
 import type { ItemType } from "react-native-dropdown-picker";
 
 const CURRENCIES = {
@@ -347,9 +350,13 @@ export const TEMP_CURRENCY_EXCHANGE = {
 };
 
 export function getCurrencyItems(): ItemType<string>[] {
-  return Object.entries(CURRENCIES).map(([code, country]) => ({
-    label: country,
-    value: code,
-    // TODO: add flag icons
-  }));
+  return Object.entries(CURRENCIES).map<ItemType<string>>(
+    ([code, country]) => ({
+      label: country,
+      value: code,
+      icon: () => (
+        <Text>{getCountryFlag(code.substring(0, 2).toUpperCase())}</Text>
+      ),
+    })
+  );
 }
