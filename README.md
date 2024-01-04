@@ -1,5 +1,9 @@
 # Currency Converter
 
+<image src="https://github.com/qur786/react-native-dice/assets/home.png" height=400 width=200 />
+
+<image src="https://github.com/qur786/react-native-dice/assets/converted.png" height=400 width=200 />
+
 ## Description
 
 Currency Converter is a mobile application built with React Native that allows users to convert between over 170 currencies. It facilitates easy calculations for currency exchange rates between different countries.
