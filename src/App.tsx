@@ -59,9 +59,24 @@ function App(): React.JSX.Element {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Currency Converter</Text>
-      <Text style={styles.convertedAmount}>
-        Result: {`${convertedAmount.toFixed(2)} ${toCurrency ?? ""}`}
-      </Text>
+      <View style={styles.resultContainer}>
+        <Text style={styles.convertedAmount}>
+          Converted Amount:{" "}
+          {`${convertedAmount.toFixed(2)} ${toCurrency ?? ""}`}
+        </Text>
+        <Text style={styles.exchangeRate}>
+          {typeof toCurrency === "string" && typeof baseCurrency === "string"
+            ? `Current Exchange Rate (${baseCurrency} - ${toCurrency}): ${(
+                TEMP_CURRENCY_EXCHANGE[
+                  toCurrency as keyof typeof TEMP_CURRENCY_EXCHANGE
+                ] /
+                TEMP_CURRENCY_EXCHANGE[
+                  baseCurrency as keyof typeof TEMP_CURRENCY_EXCHANGE
+                ]
+              ).toFixed(2)} `
+            : undefined}
+        </Text>
+      </View>
       <View style={styles.amountContainer}>
         <Text style={styles.amountLabel}>Amount</Text>
         <TextInput
@@ -111,11 +126,14 @@ const styles = StyleSheet.create({
     color: "#25CCF7",
     fontFamily: "cursive",
   },
-  convertedAmount: {
-    textAlign: "center",
-    height: 48,
-    marginVertical: 20,
+  resultContainer: {
+    height: 56,
+    marginVertical: 24,
+    alignItems: "center",
+    gap: 10,
   },
+  convertedAmount: {},
+  exchangeRate: {},
   dropdownContainer: {
     flexDirection: "row",
     gap: 10,
