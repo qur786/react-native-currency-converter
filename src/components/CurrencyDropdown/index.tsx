@@ -31,6 +31,11 @@ export function CurrencyDropdown({
       items={items}
       containerStyle={containerStyle}
       style={styles.box}
+      min={0}
+      placeholder="Select a currency"
+      searchable
+      mode="BADGE"
+      listMode="MODAL"
     />
   );
 }
