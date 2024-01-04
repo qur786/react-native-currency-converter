@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Pressable,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
   Text,
   TextInput,
@@ -58,47 +57,44 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <>
-      <StatusBar />
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.title}>Currency Converter</Text>
-        <Text style={styles.convertedAmount}>
-          Result: {`${convertedAmount.toFixed(2)} ${toCurrency ?? ""}`}
-        </Text>
-        <View style={styles.amountContainer}>
-          <Text style={styles.amountLabel}>Amount</Text>
-          <TextInput
-            value={amount}
-            onChangeText={setAmount}
-            keyboardType="number-pad"
-            placeholder="Enter amount"
-            style={styles.amountInput}
-          />
-          <Pressable
-            onPress={handleConvertPress}
-            android_ripple={{
-              color: "#67E6DC",
-            }}
-            style={styles.convertBtn}>
-            <Text style={styles.convertBtnText}>Convert</Text>
-          </Pressable>
-        </View>
-        <View style={styles.dropdownContainer}>
-          <CurrencyDropdown
-            value={baseCurrency}
-            setValue={setBaseCurrency}
-            items={getCurrencyItems()}
-            containerStyle={styles.currencyDropdownFrom}
-          />
-          <CurrencyDropdown
-            value={toCurrency}
-            setValue={setToCurrency}
-            items={getCurrencyItems()}
-            containerStyle={styles.currencyDropdownTo}
-          />
-        </View>
-      </SafeAreaView>
-    </>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Currency Converter</Text>
+      <Text style={styles.convertedAmount}>
+        Result: {`${convertedAmount.toFixed(2)} ${toCurrency ?? ""}`}
+      </Text>
+      <View style={styles.amountContainer}>
+        <Text style={styles.amountLabel}>Amount</Text>
+        <TextInput
+          value={amount}
+          onChangeText={setAmount}
+          keyboardType="number-pad"
+          placeholder="Enter amount"
+          style={styles.amountInput}
+        />
+        <Pressable
+          onPress={handleConvertPress}
+          android_ripple={{
+            color: "#67E6DC",
+          }}
+          style={styles.convertBtn}>
+          <Text style={styles.convertBtnText}>Convert</Text>
+        </Pressable>
+      </View>
+      <View style={styles.dropdownContainer}>
+        <CurrencyDropdown
+          value={baseCurrency}
+          setValue={setBaseCurrency}
+          items={getCurrencyItems()}
+          containerStyle={styles.currencyDropdownFrom}
+        />
+        <CurrencyDropdown
+          value={toCurrency}
+          setValue={setToCurrency}
+          items={getCurrencyItems()}
+          containerStyle={styles.currencyDropdownTo}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
