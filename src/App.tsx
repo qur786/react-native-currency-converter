@@ -62,7 +62,9 @@ function App(): React.JSX.Element {
       <StatusBar />
       <SafeAreaView style={styles.container}>
         <Text style={styles.title}>Currency Converter</Text>
-        <Text style={styles.convertedAmount}>Result: {convertedAmount}</Text>
+        <Text style={styles.convertedAmount}>
+          Result: {convertedAmount.toFixed(2)}
+        </Text>
         <View style={styles.amountContainer}>
           <Text style={styles.amountLabel}>Amount</Text>
           <TextInput
