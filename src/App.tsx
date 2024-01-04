@@ -63,7 +63,7 @@ function App(): React.JSX.Element {
       <SafeAreaView style={styles.container}>
         <Text style={styles.title}>Currency Converter</Text>
         <Text style={styles.convertedAmount}>
-          Result: {convertedAmount.toFixed(2)}
+          Result: {`${convertedAmount.toFixed(2)} ${toCurrency ?? ""}`}
         </Text>
         <View style={styles.amountContainer}>
           <Text style={styles.amountLabel}>Amount</Text>
