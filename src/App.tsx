@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  Vibration,
   View,
 } from "react-native";
 import type { PressableProps } from "react-native";
@@ -34,6 +35,7 @@ function App(): React.JSX.Element {
     }
 
     Keyboard.dismiss();
+    Vibration.vibrate(300);
 
     if (typeof baseCurrency !== "string") {
       return Snackbar.show({
