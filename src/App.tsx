@@ -35,7 +35,6 @@ function App(): React.JSX.Element {
     }
 
     Keyboard.dismiss();
-    Vibration.vibrate(300);
 
     if (typeof baseCurrency !== "string") {
       return Snackbar.show({
@@ -62,7 +61,17 @@ function App(): React.JSX.Element {
           baseCurrency as keyof typeof TEMP_CURRENCY_EXCHANGE
         ]);
 
+    Vibration.vibrate(300);
     setConvertedAmount(output);
+  };
+
+  const handleResetButtonPress: PressableProps["onPress"] = () => {
+    setAmount("");
+    setConvertedAmount(0);
+    setBaseCurrency(null);
+    setToCurrency(null);
+    Keyboard.dismiss();
+    Vibration.vibrate(300);
   };
 
   return (
@@ -116,7 +125,7 @@ function App(): React.JSX.Element {
           <Text style={styles.convertBtnText}>Convert</Text>
         </Pressable>
         <Pressable
-          onPress={console.log}
+          onPress={handleResetButtonPress}
           android_ripple={{
             color: "#67E6DC",
           }}
