@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Keyboard,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -31,6 +32,8 @@ function App(): React.JSX.Element {
         backgroundColor: "#E8290B",
       });
     }
+
+    Keyboard.dismiss();
 
     if (typeof baseCurrency !== "string") {
       return Snackbar.show({

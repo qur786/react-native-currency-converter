@@ -36,6 +36,9 @@ export function CurrencyDropdown({
       searchable
       mode="BADGE"
       listMode="MODAL"
+      labelProps={{
+        numberOfLines: 1,
+      }}
     />
   );
 }
