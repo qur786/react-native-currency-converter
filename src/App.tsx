@@ -105,32 +105,32 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
     async function fetchData() {
-      let data: Record<string, number> = {};
-      const GetTodayExchangeDataQuery = `Select rates FROM ${TABLE_NAME} WHERE date=Date("now")`;
-      const result = await database?.executeSql(GetTodayExchangeDataQuery);
-      if (result !== undefined && result[0].rows.length > 0) {
-        const stringifiedData = result[0].rows.item(result[0].rows.length - 1)
-          .rates as string;
-        data = JSON.parse(stringifiedData) as Record<string, number>;
-      } else {
-        const res = (await (await fetch(API_URL)).json()) as FixerOutput;
-        if (res.success === true) {
-          data = res.rates;
-          const InsertTodayExchangeDataQuery = `INSERT INTO ${TABLE_NAME} (date, rates) VALUES (Date(?), ?)`;
-          await database?.executeSql(InsertTodayExchangeDataQuery, [
-            data.date,
-            JSON.stringify(data.rates),
-          ]);
+      if (database !== null) {
+        let data: Record<string, number> = {};
+        const GetTodayExchangeDataQuery = `Select rates FROM ${TABLE_NAME} WHERE date=Date("now")`;
+        const result = await database.executeSql(GetTodayExchangeDataQuery);
+        if (result[0].rows.length > 0) {
+          const stringifiedData = result[0].rows.item(result[0].rows.length - 1)
+            .rates as string;
+          data = JSON.parse(stringifiedData) as Record<string, number>;
         } else {
-          throw new Error("API failed to fetch data.");
+          const res = (await (await fetch(API_URL)).json()) as FixerOutput;
+          if (res.success === true) {
+            data = res.rates;
+            const InsertTodayExchangeDataQuery = `INSERT INTO ${TABLE_NAME} (date, rates) VALUES (Date(?), ?)`;
+            await database.executeSql(InsertTodayExchangeDataQuery, [
+              data.date,
+              JSON.stringify(data.rates),
+            ]);
+          } else {
+            throw new Error("API failed to fetch data.");
+          }
         }
+        setCurrencyExchangeData(data);
       }
-      setCurrencyExchangeData(data);
     }
 
-    if (database !== null) {
-      fetchData().catch(console.log);
-    }
+    fetchData().catch(console.log);
   }, [database]);
 
   return (
