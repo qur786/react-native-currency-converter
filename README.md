@@ -15,6 +15,8 @@ Currency Converter is a mobile application built with React Native that allows u
 - **Error Messaging:** Incorporated [react-native-snackbar](https://www.npmjs.com/package/react-native-snackbar) to display various error messages for seamless user experience.
 - **Real-Time Exchange Rates:** Utilizes the [Fixer API](https://fixer.io/) to provide up-to-date exchange rates.
 - **Flag Display:** Shows corresponding country flags using Unicode icons alongside currency names.
+- **Caching with SQLite:** Implements caching of exchange data using [react-native-sqlite-storage](https://www.npmjs.com/package/react-native-sqlite-storage) to reduce network interactions, enabling faster calculations and avoiding unnecessary API requests.
+- **Fallback Exchange Data:** Utilizes a JSON file as a fallback for exchange data when the SQLite DB has no prior data or when the Fixer API is inaccessible due to reasons such as API limit exhaustion.
 
 ## Installation
 
@@ -34,6 +36,7 @@ Currency Converter is a mobile application built with React Native that allows u
 - react-native: 0.73.1
 - react-native-dropdown-picker: ^5.4.6
 - react-native-snackbar: ^2.6.2
+- react-native-sqlite-storage: ^6.0.1
 
 ## API Reference
 
