@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Keyboard,
   Pressable,
@@ -12,17 +12,20 @@ import {
 import type { PressableProps } from "react-native";
 import Snackbar from "react-native-snackbar";
 import { CurrencyDropdown } from "./components/CurrencyDropdown";
+import { connectDb, executeQuery } from "./db";
 import {
   getCountryFlagFromCurrencyCode,
   getCurrencyItems,
   TEMP_CURRENCY_EXCHANGE,
 } from "./utils";
+import type { SQLiteDatabase } from "react-native-sqlite-storage";
 
 function App(): React.JSX.Element {
   const [amount, setAmount] = useState("");
   const [convertedAmount, setConvertedAmount] = useState<number>(0);
   const [baseCurrency, setBaseCurrency] = useState<string | null>(null);
   const [toCurrency, setToCurrency] = useState<string | null>(null);
+  const [_, setDatabase] = useState<SQLiteDatabase | null>(null);
 
   const handleConvertButtonPress: PressableProps["onPress"] = () => {
     const amt = Number.parseFloat(amount);
@@ -73,6 +76,28 @@ function App(): React.JSX.Element {
     Keyboard.dismiss();
     Vibration.vibrate(300);
   };
+
+  useEffect(() => {
+    let db: SQLiteDatabase | null = null;
+    async function initDB(): Promise<void> {
+      db = await connectDb("ExchangeDB");
+      setDatabase(db);
+      const CreateExchangeDBQuery = `CREATE TABLE IF NOT EXISTS exchange_table (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        date TEXT,
+        data JSON
+    )`;
+      await executeQuery(db, CreateExchangeDBQuery);
+    }
+
+    initDB().catch(() => {
+      db?.close().catch(console.log);
+    });
+
+    return () => {
+      db?.close().catch(console.log);
+    };
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
