@@ -26,6 +26,15 @@ function App(): React.JSX.Element {
     Record<string, number>
   >({});
 
+  const exchangeRate =
+    Number.isNaN(
+      currencyExchangeData[toCurrency ?? ""] /
+        currencyExchangeData[baseCurrency ?? ""]
+    ) === false
+      ? currencyExchangeData[toCurrency ?? ""] /
+        currencyExchangeData[baseCurrency ?? ""]
+      : 0;
+
   const handleConvertButtonPress: PressableProps["onPress"] = () => {
     const amt = Number.parseFloat(amount);
     if (Number.isNaN(amt) === true) {
@@ -54,12 +63,10 @@ function App(): React.JSX.Element {
       });
     }
 
-    const output =
-      amt *
-      (currencyExchangeData[toCurrency] / currencyExchangeData[baseCurrency]);
+    const output = amt * exchangeRate;
 
     Vibration.vibrate(300);
-    setConvertedAmount(Number.isNaN(output) === true ? output : 0);
+    setConvertedAmount(output);
   };
 
   const handleResetButtonPress: PressableProps["onPress"] = () => {
@@ -78,7 +85,7 @@ function App(): React.JSX.Element {
       setDatabase(db);
       const CreateExchangeDBQuery = `CREATE TABLE IF NOT EXISTS exchange_table (
         date TEXT,
-        data JSON
+        rates JSON
     )`;
       await executeQuery(db, CreateExchangeDBQuery);
     }
@@ -95,18 +102,34 @@ function App(): React.JSX.Element {
   useEffect(() => {
     async function fetchData() {
       const GetTodayExchangeDataQuery =
-        'Select data FROM exchange_table WHERE date=Date("now")';
+        'Select rates FROM exchange_table WHERE date=Date("now")';
       const result = await database?.executeSql(GetTodayExchangeDataQuery);
       if (result !== undefined && result[0].rows.length > 0) {
-        const data = result[0].rows.item(0);
-        console.log(data);
-        setCurrencyExchangeData(data);
+        const data = result[0].rows.item(result[0].rows.length - 1).rates;
+        setCurrencyExchangeData(JSON.parse(data));
       } else {
-        // TODO: fetch data using API
+        const data = await (
+          await fetch(
+            "http://data.fixer.io/api/latest?access_key=e84f356aaafeeb2833f72ed1558667a5"
+          )
+        ).json();
+        if (data.success === true) {
+          setCurrencyExchangeData(data.rates);
+          const InsertTodayExchangeDataQuery =
+            "INSERT INTO exchange_table (date, rates) VALUES (Date(?), ?)";
+          await database?.executeSql(InsertTodayExchangeDataQuery, [
+            data.date,
+            JSON.stringify(data.rates),
+          ]);
+        } else {
+          throw new Error("API failed to fetch data.");
+        }
       }
     }
 
-    fetchData().catch(console.log);
+    if (database !== null) {
+      fetchData().catch(console.log);
+    }
   }, [database]);
 
   return (
@@ -128,14 +151,8 @@ function App(): React.JSX.Element {
           )} - ${getCountryFlagFromCurrencyCode(toCurrency)})`}</Text>
         ) : undefined}
         <Text style={styles.result}>
-          {typeof toCurrency === "string" &&
-          typeof baseCurrency === "string" &&
-          typeof currencyExchangeData[toCurrency] === "number" &&
-          typeof currencyExchangeData[baseCurrency] === "number"
-            ? (
-                currencyExchangeData[toCurrency] /
-                currencyExchangeData[baseCurrency]
-              ).toFixed(2)
+          {typeof toCurrency === "string" && typeof baseCurrency === "string"
+            ? exchangeRate.toFixed(2)
             : undefined}
         </Text>
       </View>
