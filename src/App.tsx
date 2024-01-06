@@ -16,6 +16,9 @@ import { DATABASE_NAME, TABLE_NAME, connectDb, executeQuery } from "./db";
 import { getCountryFlagFromCurrencyCode, getCurrencyItems } from "./utils";
 import type { SQLiteDatabase } from "react-native-sqlite-storage";
 
+const API_URL =
+  "http://data.fixer.io/api/latest?access_key=e84f356aaafeeb2833f72ed1558667a5";
+
 function App(): React.JSX.Element {
   const [amount, setAmount] = useState("");
   const [convertedAmount, setConvertedAmount] = useState<number>(0);
@@ -107,11 +110,7 @@ function App(): React.JSX.Element {
         const data = result[0].rows.item(result[0].rows.length - 1).rates;
         setCurrencyExchangeData(JSON.parse(data));
       } else {
-        const data = await (
-          await fetch(
-            "http://data.fixer.io/api/latest?access_key=e84f356aaafeeb2833f72ed1558667a5"
-          )
-        ).json();
+        const data = await (await fetch(API_URL)).json();
         if (data.success === true) {
           setCurrencyExchangeData(data.rates);
           const InsertTodayExchangeDataQuery = `INSERT INTO ${TABLE_NAME} (date, rates) VALUES (Date(?), ?)`;
