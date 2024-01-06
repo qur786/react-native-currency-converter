@@ -13,11 +13,7 @@ import type { PressableProps } from "react-native";
 import Snackbar from "react-native-snackbar";
 import { CurrencyDropdown } from "./components/CurrencyDropdown";
 import { connectDb, executeQuery } from "./db";
-import {
-  getCountryFlagFromCurrencyCode,
-  getCurrencyItems,
-  TEMP_CURRENCY_EXCHANGE,
-} from "./utils";
+import { getCountryFlagFromCurrencyCode, getCurrencyItems } from "./utils";
 import type { SQLiteDatabase } from "react-native-sqlite-storage";
 
 function App(): React.JSX.Element {
@@ -25,7 +21,10 @@ function App(): React.JSX.Element {
   const [convertedAmount, setConvertedAmount] = useState<number>(0);
   const [baseCurrency, setBaseCurrency] = useState<string | null>(null);
   const [toCurrency, setToCurrency] = useState<string | null>(null);
-  const [_, setDatabase] = useState<SQLiteDatabase | null>(null);
+  const [database, setDatabase] = useState<SQLiteDatabase | null>(null);
+  const [currencyExchangeData, setCurrencyExchangeData] = useState<
+    Record<string, number>
+  >({});
 
   const handleConvertButtonPress: PressableProps["onPress"] = () => {
     const amt = Number.parseFloat(amount);
@@ -57,15 +56,10 @@ function App(): React.JSX.Element {
 
     const output =
       amt *
-      (TEMP_CURRENCY_EXCHANGE[
-        toCurrency as keyof typeof TEMP_CURRENCY_EXCHANGE
-      ] /
-        TEMP_CURRENCY_EXCHANGE[
-          baseCurrency as keyof typeof TEMP_CURRENCY_EXCHANGE
-        ]);
+      (currencyExchangeData[toCurrency] / currencyExchangeData[baseCurrency]);
 
     Vibration.vibrate(300);
-    setConvertedAmount(output);
+    setConvertedAmount(Number.isNaN(output) === true ? output : 0);
   };
 
   const handleResetButtonPress: PressableProps["onPress"] = () => {
@@ -83,7 +77,6 @@ function App(): React.JSX.Element {
       db = await connectDb("ExchangeDB");
       setDatabase(db);
       const CreateExchangeDBQuery = `CREATE TABLE IF NOT EXISTS exchange_table (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
         date TEXT,
         data JSON
     )`;
@@ -98,6 +91,23 @@ function App(): React.JSX.Element {
       db?.close().catch(console.log);
     };
   }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      const GetTodayExchangeDataQuery =
+        'Select data FROM exchange_table WHERE date=Date("now")';
+      const result = await database?.executeSql(GetTodayExchangeDataQuery);
+      if (result !== undefined && result[0].rows.length > 0) {
+        const data = result[0].rows.item(0);
+        console.log(data);
+        setCurrencyExchangeData(data);
+      } else {
+        // TODO: fetch data using API
+      }
+    }
+
+    fetchData().catch(console.log);
+  }, [database]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -118,14 +128,13 @@ function App(): React.JSX.Element {
           )} - ${getCountryFlagFromCurrencyCode(toCurrency)})`}</Text>
         ) : undefined}
         <Text style={styles.result}>
-          {typeof toCurrency === "string" && typeof baseCurrency === "string"
+          {typeof toCurrency === "string" &&
+          typeof baseCurrency === "string" &&
+          typeof currencyExchangeData[toCurrency] === "number" &&
+          typeof currencyExchangeData[baseCurrency] === "number"
             ? (
-                TEMP_CURRENCY_EXCHANGE[
-                  toCurrency as keyof typeof TEMP_CURRENCY_EXCHANGE
-                ] /
-                TEMP_CURRENCY_EXCHANGE[
-                  baseCurrency as keyof typeof TEMP_CURRENCY_EXCHANGE
-                ]
+                currencyExchangeData[toCurrency] /
+                currencyExchangeData[baseCurrency]
               ).toFixed(2)
             : undefined}
         </Text>
