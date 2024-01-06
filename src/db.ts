@@ -19,3 +19,7 @@ export async function executeQuery(
   const [result] = await database.executeSql(query, params);
   return result;
 }
+
+export const DATABASE_NAME = "ExchangeDB";
+
+export const TABLE_NAME = "exchange_table";

@@ -12,7 +12,7 @@ import {
 import type { PressableProps } from "react-native";
 import Snackbar from "react-native-snackbar";
 import { CurrencyDropdown } from "./components/CurrencyDropdown";
-import { connectDb, executeQuery } from "./db";
+import { DATABASE_NAME, TABLE_NAME, connectDb, executeQuery } from "./db";
 import { getCountryFlagFromCurrencyCode, getCurrencyItems } from "./utils";
 import type { SQLiteDatabase } from "react-native-sqlite-storage";
 
@@ -81,9 +81,9 @@ function App(): React.JSX.Element {
   useEffect(() => {
     let db: SQLiteDatabase | null = null;
     async function initDB(): Promise<void> {
-      db = await connectDb("ExchangeDB");
+      db = await connectDb(DATABASE_NAME);
       setDatabase(db);
-      const CreateExchangeDBQuery = `CREATE TABLE IF NOT EXISTS exchange_table (
+      const CreateExchangeDBQuery = `CREATE TABLE IF NOT EXISTS ${DATABASE_NAME} (
         date TEXT,
         rates JSON
     )`;
@@ -101,8 +101,7 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
     async function fetchData() {
-      const GetTodayExchangeDataQuery =
-        'Select rates FROM exchange_table WHERE date=Date("now")';
+      const GetTodayExchangeDataQuery = `Select rates FROM ${TABLE_NAME} WHERE date=Date("now")`;
       const result = await database?.executeSql(GetTodayExchangeDataQuery);
       if (result !== undefined && result[0].rows.length > 0) {
         const data = result[0].rows.item(result[0].rows.length - 1).rates;
@@ -115,8 +114,7 @@ function App(): React.JSX.Element {
         ).json();
         if (data.success === true) {
           setCurrencyExchangeData(data.rates);
-          const InsertTodayExchangeDataQuery =
-            "INSERT INTO exchange_table (date, rates) VALUES (Date(?), ?)";
+          const InsertTodayExchangeDataQuery = `INSERT INTO ${TABLE_NAME} (date, rates) VALUES (Date(?), ?)`;
           await database?.executeSql(InsertTodayExchangeDataQuery, [
             data.date,
             JSON.stringify(data.rates),
