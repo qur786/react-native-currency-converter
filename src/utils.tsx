@@ -3,6 +3,26 @@ import { Text } from "react-native";
 import { getCountryFlag } from "./flag-icons";
 import type { ItemType } from "react-native-dropdown-picker";
 
+interface FixerExchangeSuccessData {
+  success: true;
+  base: string;
+  date: string;
+  rates: Record<string, number>;
+}
+
+interface FixerError {
+  code: number;
+  type: string;
+  info: string;
+}
+
+interface FixerExchangeSuccessError {
+  success: false;
+  error: FixerError;
+}
+
+export type FixerOutput = FixerExchangeSuccessData | FixerExchangeSuccessError;
+
 const CURRENCIES = {
   AED: "United Arab Emirates Dirham",
   AFN: "Afghan Afghani",

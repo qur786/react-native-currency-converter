@@ -14,6 +14,7 @@ import Snackbar from "react-native-snackbar";
 import { CurrencyDropdown } from "./components/CurrencyDropdown";
 import { DATABASE_NAME, TABLE_NAME, connectDb, executeQuery } from "./db";
 import { getCountryFlagFromCurrencyCode, getCurrencyItems } from "./utils";
+import type { FixerOutput } from "./utils";
 import type { SQLiteDatabase } from "react-native-sqlite-storage";
 
 const API_URL =
@@ -104,15 +105,17 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
     async function fetchData() {
+      let data: Record<string, number> = {};
       const GetTodayExchangeDataQuery = `Select rates FROM ${TABLE_NAME} WHERE date=Date("now")`;
       const result = await database?.executeSql(GetTodayExchangeDataQuery);
       if (result !== undefined && result[0].rows.length > 0) {
-        const data = result[0].rows.item(result[0].rows.length - 1).rates;
-        setCurrencyExchangeData(JSON.parse(data));
+        const stringifiedData = result[0].rows.item(result[0].rows.length - 1)
+          .rates as string;
+        data = JSON.parse(stringifiedData) as Record<string, number>;
       } else {
-        const data = await (await fetch(API_URL)).json();
-        if (data.success === true) {
-          setCurrencyExchangeData(data.rates);
+        const res = (await (await fetch(API_URL)).json()) as FixerOutput;
+        if (res.success === true) {
+          data = res.rates;
           const InsertTodayExchangeDataQuery = `INSERT INTO ${TABLE_NAME} (date, rates) VALUES (Date(?), ?)`;
           await database?.executeSql(InsertTodayExchangeDataQuery, [
             data.date,
@@ -122,6 +125,7 @@ function App(): React.JSX.Element {
           throw new Error("API failed to fetch data.");
         }
       }
+      setCurrencyExchangeData(data);
     }
 
     if (database !== null) {
