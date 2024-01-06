@@ -3,7 +3,7 @@ import { Text } from "react-native";
 import { getCountryFlag } from "./flag-icons";
 import type { ItemType } from "react-native-dropdown-picker";
 
-interface FixerExchangeSuccessData {
+export interface FixerExchangeSuccessData {
   success: true;
   base: string;
   date: string;

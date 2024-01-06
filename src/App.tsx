@@ -14,7 +14,8 @@ import Snackbar from "react-native-snackbar";
 import { CurrencyDropdown } from "./components/CurrencyDropdown";
 import { DATABASE_NAME, TABLE_NAME, connectDb, executeQuery } from "./db";
 import { getCountryFlagFromCurrencyCode, getCurrencyItems } from "./utils";
-import type { FixerOutput } from "./utils";
+import FALLBACK_EXCHANGE_DATA from "../assets/fallback-exchange-rate.json";
+import type { FixerExchangeSuccessData, FixerOutput } from "./utils";
 import type { SQLiteDatabase } from "react-native-sqlite-storage";
 
 const API_URL =
@@ -130,7 +131,18 @@ function App(): React.JSX.Element {
       }
     }
 
-    fetchData().catch(console.log);
+    fetchData().catch(() => {
+      const { rates, date } =
+        FALLBACK_EXCHANGE_DATA as FixerExchangeSuccessData;
+      setCurrencyExchangeData(rates);
+      Snackbar.show({
+        text: `Unable to Fetch Latest data, providing exchange rates of ${new Date(
+          date
+        ).toLocaleDateString(undefined, { dateStyle: "medium" })}.`,
+        duration: Snackbar.LENGTH_INDEFINITE,
+        backgroundColor: "#DFAF2B",
+      });
+    });
   }, [database]);
 
   return (
