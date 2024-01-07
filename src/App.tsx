@@ -14,7 +14,10 @@ function App(): React.JSX.Element {
       <NavigationContainer>
         <Navigator
           initialRouteName="home"
-          screenOptions={{ headerShown: false }}>
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: "#FFF6F6" },
+          }}>
           <Screen name="home" component={Home} />
           <Screen name="offline" component={Offline} />
         </Navigator>
@@ -27,6 +30,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 16,
+    backgroundColor: "#FFF6F6",
   },
 });
 
