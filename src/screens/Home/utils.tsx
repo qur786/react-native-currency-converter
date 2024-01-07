@@ -1,6 +1,6 @@
 import React from "react";
 import { Text } from "react-native";
-import { getCountryFlag } from "./flag-icons";
+import { getCountryFlag } from "../../flag-icons";
 import type { ItemType } from "react-native-dropdown-picker";
 
 export interface FixerExchangeSuccessData {
