@@ -16,12 +16,13 @@ import FALLBACK_EXCHANGE_DATA from "../../../assets/fallback-exchange-rate.json"
 import { CurrencyDropdown } from "../../components/CurrencyDropdown";
 import { DATABASE_NAME, TABLE_NAME, connectDb } from "../../db";
 import type { FixerExchangeSuccessData, FixerOutput } from "./utils";
+import type { HomeScreenProps } from "../../route-types";
 import type { SQLiteDatabase } from "react-native-sqlite-storage";
 
 const API_URL =
   "http://data.fixer.io/api/latest?access_key=e84f356aaafeeb2833f72ed1558667a5";
 
-export function Home(): React.JSX.Element {
+export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
   const [amount, setAmount] = useState("");
   const [convertedAmount, setConvertedAmount] = useState<number>(0);
   const [baseCurrency, setBaseCurrency] = useState<string | null>(null);
@@ -116,20 +117,21 @@ export function Home(): React.JSX.Element {
             .rates as string;
           data = JSON.parse(stringifiedData) as Record<string, number>;
         } else {
-          const { isConnected, isInternetReachable } = await netInfoFetch();
-          Snackbar.show({
-            text: JSON.stringify({ isConnected, isInternetReachable }),
-          }); // TODO: replace this with navigation to an offline indicator page
-          const res = (await (await fetch(API_URL)).json()) as FixerOutput;
-          if (res.success === true) {
-            data = res.rates;
-            const InsertTodayExchangeDataQuery = `INSERT INTO ${TABLE_NAME} (date, rates) VALUES (Date(?), ?)`;
-            await database.executeSql(InsertTodayExchangeDataQuery, [
-              data.date,
-              JSON.stringify(data.rates),
-            ]);
+          const { isConnected } = await netInfoFetch();
+          if (isConnected === false) {
+            navigation.navigate("home");
           } else {
-            throw new Error("API failed to fetch data.");
+            const res = (await (await fetch(API_URL)).json()) as FixerOutput;
+            if (res.success === true) {
+              data = res.rates;
+              const InsertTodayExchangeDataQuery = `INSERT INTO ${TABLE_NAME} (date, rates) VALUES (Date(?), ?)`;
+              await database.executeSql(InsertTodayExchangeDataQuery, [
+                data.date,
+                JSON.stringify(data.rates),
+              ]);
+            } else {
+              throw new Error("API failed to fetch data.");
+            }
           }
         }
         setCurrencyExchangeData(data);
@@ -148,7 +150,7 @@ export function Home(): React.JSX.Element {
         backgroundColor: "#DFAF2B",
       });
     });
-  }, [database]);
+  }, [database, navigation]);
 
   return (
     <>
