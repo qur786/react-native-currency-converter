@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import type { PressableProps } from "react-native";
-import { fetch as netInfoFetch } from "@react-native-community/netinfo";
+import { useNetInfo } from "@react-native-community/netinfo";
 import Snackbar from "react-native-snackbar";
 import { getCountryFlagFromCurrencyCode, getCurrencyItems } from "./utils";
 import FALLBACK_EXCHANGE_DATA from "../../../assets/fallback-exchange-rate.json";
@@ -31,6 +31,8 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
   const [currencyExchangeData, setCurrencyExchangeData] = useState<
     Record<string, number>
   >({});
+
+  const { isConnected } = useNetInfo();
 
   const exchangeRate =
     Number.isNaN(
@@ -117,8 +119,7 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
             .rates as string;
           data = JSON.parse(stringifiedData) as Record<string, number>;
         } else {
-          const { isConnected } = await netInfoFetch();
-          if (isConnected === false) {
+          if (isConnected !== true) {
             navigation.navigate("offline");
           } else {
             const res = (await (await fetch(API_URL)).json()) as FixerOutput;
@@ -150,7 +151,7 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
         backgroundColor: "#DFAF2B",
       });
     });
-  }, [database, navigation]);
+  }, [database, isConnected, navigation]);
 
   return (
     <>
