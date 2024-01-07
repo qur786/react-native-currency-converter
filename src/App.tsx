@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import type { PressableProps } from "react-native";
+import { fetch as netInfoFetch } from "@react-native-community/netinfo";
 import Snackbar from "react-native-snackbar";
 import { CurrencyDropdown } from "./components/CurrencyDropdown";
 import { DATABASE_NAME, TABLE_NAME, connectDb, executeQuery } from "./db";
@@ -88,14 +89,15 @@ function App(): React.JSX.Element {
     async function initDB(): Promise<void> {
       db = await connectDb(DATABASE_NAME);
       setDatabase(db);
-      const CreateExchangeDBQuery = `CREATE TABLE IF NOT EXISTS ${DATABASE_NAME} (
+      const CreateExchangeDBQuery = `CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
         date TEXT,
         rates JSON
     )`;
       await executeQuery(db, CreateExchangeDBQuery);
     }
 
-    initDB().catch(() => {
+    initDB().catch((err) => {
+      console.log(err);
       db?.close().catch(console.log);
     });
 
@@ -115,6 +117,10 @@ function App(): React.JSX.Element {
             .rates as string;
           data = JSON.parse(stringifiedData) as Record<string, number>;
         } else {
+          const { isConnected, isInternetReachable } = await netInfoFetch();
+          Snackbar.show({
+            text: JSON.stringify({ isConnected, isInternetReachable }),
+          }); // TODO: replace this with navigation to an offline indicator page
           const res = (await (await fetch(API_URL)).json()) as FixerOutput;
           if (res.success === true) {
             data = res.rates;
