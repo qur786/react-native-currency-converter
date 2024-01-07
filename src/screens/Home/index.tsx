@@ -110,7 +110,7 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
     async function fetchData() {
       if (database !== null) {
         let data: Record<string, number> = {};
-        const GetTodayExchangeDataQuery = `Select rates FROM ${TABLE_NAME} WHERE date=Date("now")`;
+        const GetTodayExchangeDataQuery = `Select rates FROM ${TABLE_NAME}`;
         const result = await database.executeSql(GetTodayExchangeDataQuery);
         if (result[0].rows.length > 0) {
           const stringifiedData = result[0].rows.item(result[0].rows.length - 1)
@@ -119,15 +119,15 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
         } else {
           const { isConnected } = await netInfoFetch();
           if (isConnected === false) {
-            navigation.navigate("home");
+            navigation.navigate("offline");
           } else {
             const res = (await (await fetch(API_URL)).json()) as FixerOutput;
             if (res.success === true) {
               data = res.rates;
               const InsertTodayExchangeDataQuery = `INSERT INTO ${TABLE_NAME} (date, rates) VALUES (Date(?), ?)`;
               await database.executeSql(InsertTodayExchangeDataQuery, [
-                data.date,
-                JSON.stringify(data.rates),
+                res.date,
+                JSON.stringify(res.rates),
               ]);
             } else {
               throw new Error("API failed to fetch data.");

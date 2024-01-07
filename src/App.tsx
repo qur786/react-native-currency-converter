@@ -1,13 +1,12 @@
 import React from "react";
-import { SafeAreaView, StyleSheet, Text } from "react-native";
+import { SafeAreaView, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Home } from "./screens/Home";
+import { Offline } from "./screens/Offline";
 import type { RootStackParamList } from "./route-types";
 
 const { Navigator, Screen } = createNativeStackNavigator<RootStackParamList>();
-
-const Offline = () => <Text>Offline</Text>;
 
 function App(): React.JSX.Element {
   return (
