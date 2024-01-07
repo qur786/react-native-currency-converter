@@ -13,7 +13,7 @@ import type { PressableProps } from "react-native";
 import { fetch as netInfoFetch } from "@react-native-community/netinfo";
 import Snackbar from "react-native-snackbar";
 import { CurrencyDropdown } from "./components/CurrencyDropdown";
-import { DATABASE_NAME, TABLE_NAME, connectDb, executeQuery } from "./db";
+import { DATABASE_NAME, TABLE_NAME, connectDb } from "./db";
 import { getCountryFlagFromCurrencyCode, getCurrencyItems } from "./utils";
 import FALLBACK_EXCHANGE_DATA from "../assets/fallback-exchange-rate.json";
 import type { FixerExchangeSuccessData, FixerOutput } from "./utils";
@@ -93,7 +93,7 @@ function App(): React.JSX.Element {
         date TEXT,
         rates JSON
     )`;
-      await executeQuery(db, CreateExchangeDBQuery);
+      await db.executeSql(CreateExchangeDBQuery);
     }
 
     initDB().catch((err) => {

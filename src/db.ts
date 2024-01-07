@@ -1,5 +1,5 @@
 import { openDatabase, enablePromise } from "react-native-sqlite-storage";
-import type { ResultSet, SQLiteDatabase } from "react-native-sqlite-storage";
+import type { SQLiteDatabase } from "react-native-sqlite-storage";
 
 export async function connectDb(databaseName: string): Promise<SQLiteDatabase> {
   enablePromise(true);
@@ -9,15 +9,6 @@ export async function connectDb(databaseName: string): Promise<SQLiteDatabase> {
   });
 
   return db;
-}
-
-export async function executeQuery(
-  database: SQLiteDatabase,
-  query: string,
-  params?: unknown[]
-): Promise<ResultSet> {
-  const [result] = await database.executeSql(query, params);
-  return result;
 }
 
 export const DATABASE_NAME = "ExchangeDB";
