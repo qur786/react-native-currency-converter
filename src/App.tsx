@@ -145,7 +145,7 @@ function App(): React.JSX.Element {
         text: `Unable to Fetch Latest data, providing exchange rates of ${new Date(
           date
         ).toLocaleDateString(undefined, { dateStyle: "medium" })}.`,
-        duration: Snackbar.LENGTH_INDEFINITE,
+        duration: Snackbar.LENGTH_LONG,
         backgroundColor: "#DFAF2B",
       });
     });
