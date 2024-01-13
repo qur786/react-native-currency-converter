@@ -17,6 +17,8 @@ Currency Converter is a mobile application built with React Native that allows u
 - **Flag Display:** Shows corresponding country flags using Unicode icons alongside currency names.
 - **Caching with SQLite:** Implements caching of exchange data using [react-native-sqlite-storage](https://www.npmjs.com/package/react-native-sqlite-storage) to reduce network interactions, enabling faster calculations and avoiding unnecessary API requests.
 - **Fallback Exchange Data:** Utilizes a JSON file as a fallback for exchange data when the SQLite DB has no prior data or when the Fixer API is inaccessible due to reasons such as API limit exhaustion.
+- **Offline Page with SVG:** Added a visually appealing UI for the offline page using the `react-native-svg` package.
+- **Interchange Base and Conversion Currencies:** Now you can easily switch between two already selected currencies to view the conversion rate and convert amounts between them.
 
 ## Installation
 
@@ -37,6 +39,7 @@ Currency Converter is a mobile application built with React Native that allows u
 - react-native-dropdown-picker: ^5.4.6
 - react-native-snackbar: ^2.6.2
 - react-native-sqlite-storage: ^6.0.1
+- react-native-svg: ^14.1.0
 
 ## API Reference
 
