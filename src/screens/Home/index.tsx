@@ -86,6 +86,12 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
     Vibration.vibrate(300);
   };
 
+  const handleInterchange: PressableProps["onPress"] = () => {
+    setConvertedAmount(0);
+    setBaseCurrency(toCurrency);
+    setToCurrency(baseCurrency);
+  };
+
   useEffect(() => {
     let db: SQLiteDatabase | null = null;
     async function initDB(): Promise<void> {
@@ -212,6 +218,11 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
           items={getCurrencyItems()}
           containerStyle={styles.currencyDropdownFrom}
         />
+        <Pressable onPress={handleInterchange}>
+          <Text style={styles.resetBtnText}>
+            <Text style={styles.interchangeBtnText}>{"\u21cc"}</Text>
+          </Text>
+        </Pressable>
         <CurrencyDropdown
           value={toCurrency}
           setValue={setToCurrency}
@@ -293,5 +304,9 @@ const styles = StyleSheet.create({
   },
   resetBtnText: {
     color: "#ffffff",
+  },
+  interchangeBtnText: {
+    color: "black",
+    fontSize: 28,
   },
 });
