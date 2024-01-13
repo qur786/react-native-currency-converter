@@ -118,6 +118,10 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
   }, []);
 
   useEffect(() => {
+    setConvertedAmount(0); // Reset converted amount whenever base or conversoon currency changes
+  }, [baseCurrency, conversionCurrency]);
+
+  useEffect(() => {
     async function fetchData() {
       if (database !== null) {
         let data: Record<string, number> = {};
@@ -168,12 +172,14 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
       <View style={styles.resultContainer}>
         <Text style={styles.resultTitle}>Converted Amount</Text>
         <Text style={styles.result}>{`${convertedAmount.toFixed(2)} ${
-          typeof conversionCurrency === "string"
+          typeof conversionCurrency === "string" &&
+          typeof baseCurrency === "string"
             ? getCountryFlag(conversionCurrency)
             : ""
         }`}</Text>
         <Text>
-          {typeof conversionCurrency === "string"
+          {typeof conversionCurrency === "string" &&
+          typeof baseCurrency === "string"
             ? `(${CURRENCIES[conversionCurrency as keyof typeof CURRENCIES]})`
             : undefined}
         </Text>
