@@ -27,7 +27,9 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
   const [amount, setAmount] = useState("");
   const [convertedAmount, setConvertedAmount] = useState<number>(0);
   const [baseCurrency, setBaseCurrency] = useState<string | null>(null);
-  const [toCurrency, setToCurrency] = useState<string | null>(null);
+  const [conversionCurrency, setConversionCurrency] = useState<string | null>(
+    null
+  );
   const [database, setDatabase] = useState<SQLiteDatabase | null>(null);
   const [currencyExchangeData, setCurrencyExchangeData] = useState<
     Record<string, number>
@@ -37,10 +39,10 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
 
   const exchangeRate =
     Number.isNaN(
-      currencyExchangeData[toCurrency ?? ""] /
+      currencyExchangeData[conversionCurrency ?? ""] /
         currencyExchangeData[baseCurrency ?? ""]
     ) === false
-      ? currencyExchangeData[toCurrency ?? ""] /
+      ? currencyExchangeData[conversionCurrency ?? ""] /
         currencyExchangeData[baseCurrency ?? ""]
       : 0;
 
@@ -64,9 +66,9 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
       });
     }
 
-    if (typeof toCurrency !== "string") {
+    if (typeof conversionCurrency !== "string") {
       return Snackbar.show({
-        text: "Select to currency",
+        text: "Select conversion currency",
         duration: Snackbar.LENGTH_SHORT,
         backgroundColor: "#E8290B",
       });
@@ -82,15 +84,15 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
     setAmount("");
     setConvertedAmount(0);
     setBaseCurrency(null);
-    setToCurrency(null);
+    setConversionCurrency(null);
     Keyboard.dismiss();
     Vibration.vibrate(300);
   };
 
   const handleInterchange: PressableProps["onPress"] = () => {
     setConvertedAmount(0);
-    setBaseCurrency(toCurrency);
-    setToCurrency(baseCurrency);
+    setBaseCurrency(conversionCurrency);
+    setConversionCurrency(baseCurrency);
   };
 
   useEffect(() => {
@@ -166,23 +168,27 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
       <View style={styles.resultContainer}>
         <Text style={styles.resultTitle}>Converted Amount</Text>
         <Text style={styles.result}>{`${convertedAmount.toFixed(2)} ${
-          typeof toCurrency === "string" ? getCountryFlag(toCurrency) : ""
+          typeof conversionCurrency === "string"
+            ? getCountryFlag(conversionCurrency)
+            : ""
         }`}</Text>
         <Text>
-          {typeof toCurrency === "string"
-            ? `(${CURRENCIES[toCurrency as keyof typeof CURRENCIES]})`
+          {typeof conversionCurrency === "string"
+            ? `(${CURRENCIES[conversionCurrency as keyof typeof CURRENCIES]})`
             : undefined}
         </Text>
-        {typeof toCurrency === "string" && typeof baseCurrency === "string" ? (
+        {typeof conversionCurrency === "string" &&
+        typeof baseCurrency === "string" ? (
           <Text
             style={
               styles.resultTitle
             }>{`Current Exchange Rate (${getCountryFlag(
             baseCurrency
-          )} - ${getCountryFlag(toCurrency)})`}</Text>
+          )} - ${getCountryFlag(conversionCurrency)})`}</Text>
         ) : undefined}
         <Text style={styles.result}>
-          {typeof toCurrency === "string" && typeof baseCurrency === "string"
+          {typeof conversionCurrency === "string" &&
+          typeof baseCurrency === "string"
             ? exchangeRate.toFixed(2)
             : undefined}
         </Text>
@@ -228,8 +234,8 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
           </Text>
         </Pressable>
         <CurrencyDropdown
-          value={toCurrency}
-          setValue={setToCurrency}
+          value={conversionCurrency}
+          setValue={setConversionCurrency}
           items={getCurrencyItems()}
           containerStyle={styles.currencyDropdownTo}
         />
