@@ -369,16 +369,12 @@ export const TEMP_CURRENCY_EXCHANGE = {
   ZWL: 350.936022,
 };
 
-export function getCountryFlagFromCurrencyCode(code: string): string {
-  return getCountryFlag(code.substring(0, 2).toUpperCase());
-}
-
 export function getCurrencyItems(): ItemType<string>[] {
   return Object.entries(CURRENCIES).map<ItemType<string>>(
     ([code, country]) => ({
       label: country,
       value: code,
-      icon: () => <Text>{getCountryFlagFromCurrencyCode(code)}</Text>,
+      icon: () => <Text>{getCountryFlag(code)}</Text>,
     })
   );
 }

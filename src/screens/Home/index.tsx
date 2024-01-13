@@ -11,7 +11,8 @@ import {
 import type { PressableProps } from "react-native";
 import { useNetInfo } from "@react-native-community/netinfo";
 import Snackbar from "react-native-snackbar";
-import { getCountryFlagFromCurrencyCode, getCurrencyItems } from "./utils";
+import { getCountryFlag } from "./flag-icons";
+import { getCurrencyItems } from "./utils";
 import FALLBACK_EXCHANGE_DATA from "../../../assets/fallback-exchange-rate.json";
 import { CurrencyDropdown } from "../../components/CurrencyDropdown";
 import { DATABASE_NAME, TABLE_NAME, connectDb } from "../../db";
@@ -165,17 +166,15 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
       <View style={styles.resultContainer}>
         <Text style={styles.resultTitle}>Converted Amount</Text>
         <Text style={styles.result}>{`${convertedAmount.toFixed(2)} ${
-          typeof toCurrency === "string"
-            ? getCountryFlagFromCurrencyCode(toCurrency)
-            : ""
+          typeof toCurrency === "string" ? getCountryFlag(toCurrency) : ""
         }`}</Text>
         {typeof toCurrency === "string" && typeof baseCurrency === "string" ? (
           <Text
             style={
               styles.resultTitle
-            }>{`Current Exchange Rate (${getCountryFlagFromCurrencyCode(
+            }>{`Current Exchange Rate (${getCountryFlag(
             baseCurrency
-          )} - ${getCountryFlagFromCurrencyCode(toCurrency)})`}</Text>
+          )} - ${getCountryFlag(toCurrency)})`}</Text>
         ) : undefined}
         <Text style={styles.result}>
           {typeof toCurrency === "string" && typeof baseCurrency === "string"
