@@ -23,7 +23,7 @@ interface FixerExchangeSuccessError {
 
 export type FixerOutput = FixerExchangeSuccessData | FixerExchangeSuccessError;
 
-const CURRENCIES = {
+export const CURRENCIES = {
   AED: "United Arab Emirates Dirham",
   AFN: "Afghan Afghani",
   ALL: "Albanian Lek",

@@ -12,7 +12,7 @@ import type { PressableProps } from "react-native";
 import { useNetInfo } from "@react-native-community/netinfo";
 import Snackbar from "react-native-snackbar";
 import { getCountryFlag } from "./flag-icons";
-import { getCurrencyItems } from "./utils";
+import { CURRENCIES, getCurrencyItems } from "./utils";
 import FALLBACK_EXCHANGE_DATA from "../../../assets/fallback-exchange-rate.json";
 import { CurrencyDropdown } from "../../components/CurrencyDropdown";
 import { DATABASE_NAME, TABLE_NAME, connectDb } from "../../db";
@@ -168,6 +168,11 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
         <Text style={styles.result}>{`${convertedAmount.toFixed(2)} ${
           typeof toCurrency === "string" ? getCountryFlag(toCurrency) : ""
         }`}</Text>
+        <Text>
+          {typeof toCurrency === "string"
+            ? `(${CURRENCIES[toCurrency as keyof typeof CURRENCIES]})`
+            : undefined}
+        </Text>
         {typeof toCurrency === "string" && typeof baseCurrency === "string" ? (
           <Text
             style={
