@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Keyboard,
   Pressable,
@@ -37,14 +37,18 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
 
   const { isConnected } = useNetInfo();
 
-  const exchangeRate =
-    Number.isNaN(
-      currencyExchangeData[conversionCurrency ?? ""] /
-        currencyExchangeData[baseCurrency ?? ""]
-    ) === false
-      ? currencyExchangeData[conversionCurrency ?? ""] /
-        currencyExchangeData[baseCurrency ?? ""]
-      : 0;
+  const exchangeRate = useMemo(() => {
+    let output = 0;
+    if (
+      typeof conversionCurrency === "string" &&
+      typeof baseCurrency === "string"
+    ) {
+      output =
+        currencyExchangeData[conversionCurrency] /
+        currencyExchangeData[baseCurrency];
+    }
+    return output;
+  }, [baseCurrency, conversionCurrency, currencyExchangeData]);
 
   const handleConvertButtonPress: PressableProps["onPress"] = () => {
     const amt = Number.parseFloat(amount);
@@ -130,14 +134,14 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
         if (result[0].rows.length > 0) {
           const stringifiedData = result[0].rows.item(result[0].rows.length - 1)
             .rates as string;
-          data = JSON.parse(stringifiedData) as Record<string, number>;
+          data = (JSON.parse(stringifiedData) as Record<string, number>) ?? {};
         } else {
           if (isConnected !== true) {
             navigation.navigate("offline");
           } else {
             const res = (await (await fetch(API_URL)).json()) as FixerOutput;
             if (res.success === true) {
-              data = res.rates;
+              data = res.rates ?? {};
               const InsertTodayExchangeDataQuery = `INSERT INTO ${TABLE_NAME} (date, rates) VALUES (Date(?), ?)`;
               await database.executeSql(InsertTodayExchangeDataQuery, [
                 res.date,
@@ -153,7 +157,7 @@ export function Home({ navigation }: HomeScreenProps): React.JSX.Element {
     }
 
     fetchData().catch(() => {
-      const { rates, date } =
+      const { rates = {}, date } =
         FALLBACK_EXCHANGE_DATA as FixerExchangeSuccessData;
       setCurrencyExchangeData(rates);
       Snackbar.show({
